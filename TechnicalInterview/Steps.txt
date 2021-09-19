@@ -1,0 +1,17 @@
+﻿1- DepartmentController: complete the implementation of the Post(...) endpoint to save in the repository the received Department and Employee information.
+2- DepartmentController: complete the implementation of the Get(...) endpoint to retrieve all the Departments stored in the repository.
+3- DepartmentController: complete the implementation of the FilterEntities(...) endpoint to retrieve all the Departments and Employees stored in the repository filtered by the recieved inclusin/exclusion rules.
+	- exclude > include
+	- excluding/including a department excludes/includes all the employees in it
+_______________________________________________________________________________________________________________________________________________________________________
+4- Implement EmployeesController to receive Post(...) requests with Employee information (and its Department). Changes are also applied to the DepartmentController VM.
+	- New Employee fields: Age, EmployeeId, DepartmentName
+	- Age must be validated as being in the [16, 70] range
+	- EmployeeId has the following format: 'E123456-ESP-ofn48skvh0'
+	- DepartmentName must be an existing department on the repository
+5- Departments are now a tree structure, Department name is now a string list with all the departments from the root to the actual department.
+	- The path must be consistent with the repository ones (in the list, n[0] to n[last-1] must exist)
+	- Department names are not unique (ie: both 'UK' and 'US' nodes have a 'Sales' department
+	- Departments must be linked to their parents in the repository
+	- Only one root (parent == null) must exist in the repository
+6- Departments are now auto-populated: in the department list, if any of the n[0] to n[last-1] do not exist they are inserted into the repository
