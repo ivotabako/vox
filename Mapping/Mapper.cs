@@ -23,27 +23,29 @@ namespace Mapping
 
         public static InternalDepartment GetInternalDepartment(Department department)
         {
-            var intDep = new InternalDepartment();
-            intDep.Id = department.Id;
-            intDep.Name = department.Name;
-            intDep.Employees = new List<InternalEmployee>();
-            foreach (var employee in department.Employees ?? new List<Employee>())
+            var intDep = new InternalDepartment
             {
-                var intEmp = new InternalEmployee();
-                intEmp.Department = intDep;
-                intEmp.Name = employee.Name;
-                intEmp.Surname = employee.Surname;
-                intDep.Employees.Add(intEmp);
-            }
+                Id = department.Id,
+                Name = department.Name
+            };
+
+            intDep.Employees = department.Employees.Select(employee => new InternalEmployee()
+            {
+                Department = intDep,
+                Name = employee.Name,
+                Surname = employee.Surname
+            }).ToList();           
 
             return intDep;
         }
 
         public static InternalEmployee GetInternalEmployee(Employee employee)
         {
-            var intEmp = new InternalEmployee();
-            intEmp.Name = employee.Name;
-            intEmp.Surname = employee.Surname;
+            var intEmp = new InternalEmployee
+            {
+                Name = employee.Name,
+                Surname = employee.Surname
+            };
 
             return intEmp;
         }

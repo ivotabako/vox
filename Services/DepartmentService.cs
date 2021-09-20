@@ -4,7 +4,7 @@ using Repository;
 using Repository.Model;
 using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Services
 {
@@ -12,31 +12,24 @@ namespace Services
     {
         public static IEnumerable<Department> GetDepartments()
         {
-            IEnumerable<InternalDepartment> intDeps = DepartmentRepository.GetAll();
-            var deps = new List<Department>();
-            foreach (var intDep in intDeps)
-            {
-                deps.Add(Mapper.GetDepartment(intDep));
-            }
-
-            return deps;
+            return DepartmentRepository.GetAll().Select(intDep => Mapper.GetDepartment(intDep));           
         }
 
         public static int Post(Department department)
         {
             var deps = DepartmentRepository.GetAll();
             var intDep = Mapper.GetInternalDepartment(department);
-            foreach (var dep in deps)
-            {
-                if (dep.Id.Equals(department.Id))
-                {
-                    intDep.InternalId = DepartmentRepository.GetById(department.Id)?.InternalId ?? 0;
-                }
-            }
+            deps
+                .Where(dep => dep.Id.Equals(department.Id))
+                .Select(d => intDep.InternalId = DepartmentRepository.GetDepartmentById(d.Id)?.InternalId ?? 0);
+            
             int departmentId = DepartmentRepository.Save(intDep);
             foreach (var employee in department.Employees)
             {
-                DepartmentRepository.Save(Mapper.GetInternalEmployee(employee));
+                int intEmpId = DepartmentRepository.GetEmployeeByName(employee.Name, employee.Surname)?.InternalId ?? 0;
+                var intEmp = Mapper.GetInternalEmployee(employee);
+                intEmp.InternalId = intEmpId;
+                DepartmentRepository.Save(intEmp);
             }
 
             return departmentId;

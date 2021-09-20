@@ -3,6 +3,7 @@ using Repository.Model;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace Repository
 {
@@ -34,23 +35,10 @@ namespace Repository
             return department.InternalId;
         }
 
-        public static InternalDepartment GetById(Guid id)
+        public static InternalDepartment GetDepartmentById(Guid id)
         {
-            foreach (var dep in departments.Values)
-            {
-                if (dep.Id.Equals(id))
-                {
-                    return dep;
-                }
-            }
-
-            return null;
+            return departments.Values.FirstOrDefault(dep => dep.Id.Equals(id));
         }
-
-        //public static InternalDepartment Get(int internalId)
-        //{
-
-        //}
 
         public static int Save(InternalEmployee employee)
         {
@@ -65,6 +53,13 @@ namespace Repository
             }
 
             return employee.InternalId;
+        }
+
+        public static InternalEmployee GetEmployeeByName(string name, string surname)
+        {
+            return employees.Values.FirstOrDefault(emp => 
+            string.Equals(emp.Name, name, StringComparison.CurrentCultureIgnoreCase) && 
+            string.Equals(emp.Surname, surname, StringComparison.CurrentCultureIgnoreCase));
         }
     }
 }
